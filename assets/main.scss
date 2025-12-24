@@ -1,0 +1,83 @@
+---
+---
+
+@import "minima";
+
+/* Solarized Light + Noto Sans Mono overrides */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;600&display=swap');
+
+:root {
+  --base03: #002b36;
+  --base02: #073642;
+  --base01: #586e75;
+  --base00: #657b83;
+  --base0:  #839496;
+  --base1:  #93a1a1;
+  --base2:  #eee8d5;
+  --base3:  #fdf6e3;
+}
+
+body {
+  background-color: var(--base3);
+  color: var(--base00);
+  font-family: "Noto Sans Mono", monospace;
+}
+
+a { color: #268bd2; }
+code, pre {
+  background: var(--base2);
+  font-family: "Noto Sans Mono", monospace;
+}
+/* Reduce side margins / widen content */
+
+.wrapper {
+  max-width: 1100px; /* default is ~800px */
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+/* ===== Header layout: stable, aligned with content ===== */
+
+.site-header {
+  border-top-width: 2px;
+  padding: 0.5rem 0;
+}
+
+.site-header .wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media screen and (min-width: 1200px) {
+  .site-header .wrapper {
+    max-width: 1100px;
+  }
+}
+
+.site-branding {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.site-logo {
+  height: 42px;
+  width: 42px;
+  border-radius: 10px;
+}
+
+.site-title {
+  margin: 0;
+  line-height: 1;
+}
+
+.site-nav {
+  justify-self: end;
+  margin: 0;
+}
+
