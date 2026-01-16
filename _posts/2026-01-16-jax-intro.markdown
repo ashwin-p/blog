@@ -1,0 +1,97 @@
+---
+layout: post
+title: "My Brief Introduction to JAX"
+---
+Since this is my first post, I'm keeping this simple to mainly see how I want the overall format to be. Please let me know if you have any feedback.
+## What is JAX?
+The docs\[[1](#ref1)\] say
+> JAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.
+
+From what I understood, JAX is a library similar to Numpy\[[2](#ref2)\] but offers the following key differences:
+1. Code can be run on multiple backends such CPU and TPU.
+2. Provides a Just-in-Time compiler to speed up computations.
+3. Allows for automatic differentitation of functions.
+
+I'm guessing the JIT makes it faster than PyTorch\[[3](#ref3)\] in some cases.
+## Quick Demo
+JAX's `jnp` module is primarily used for calculations and is called similarly to Numpy's\[[2](#ref2)\].
+{% highlight python %}
+import jax.numpy as jnp
+import matplotlib.pyplot as plt // To be used for plotting later on.
+{% endhighlight %}
+Now a function such as $f(x) = e^{-x^2}cos(e^{x^2})$ can be defined with
+{% highlight python %}
+def func(x):
+    return jnp.exp(-x ** 2) * jnp.cos(jnp.exp(x ** 2))
+{% endhighlight %}
+
+To plot it, we create an array of inputs(x values) and apply the function on it.
+{% highlight python %}
+x_jnp = jnp.linspace(-2, 2, 10000)
+y_jnp = func(x_jnp)
+{% endhighlight %}
+
+Before plotting this, I'd also want to test out the autograd function in JAX.
+
+{% highlight python %}
+from jax import grad, vmap // To vectorize functions.
+derivative = grad(func) // This will now only take in a single input.
+derivative_vec = vmap(derivative) // Now this can be applied on to arrays.
+y_prime = derivative_vec(x_jnp)
+{% endhighlight %}
+
+Finally, plotting the two functions gives this:<br/>
+<img src="{{ "/assets/jax-intro/jax-intro-1.svg" | relative_url }}" alt="Plot of the two functions." class="centre-image"><br/>
+## Speeding it Up
+While JAX provides convenient functions for arithmetic, it would be nice for it to be fast. To achieve this, there are two key ways:
+1. Just-in-Time Compilation (JIT)
+2. Sharding
+
+The JIT combines combines several smaller operations into one, reducing memory overhead and caches intermediate results. It also optimizes code for the specific hardware it being run on. However for a function to be optimized by the JIT, it needs to be pure(no modifying variables or printing), input array shapes should be fixed and standard control flow should not be used like `if` or `for`(there seem to be some workarounds for the last part). If the function matches the conditions, it can be passed to the JIT like this:
+{% highlight python %}
+from jax import jit
+func_jit = jit(func)
+y_jit = func_jit(x_jnp)
+{% endhighlight %}
+Alternatively, The `@jit` decorator can be added to the top of the function. 
+
+Sharding allows for the same program to run on multiple data at the same time(SPMD). I'll be testing this out on four cpu cores I set
+{%highlight python %}
+import os
+os.environ["XLA_FLAGS"] = "--xla_force_host_platform_device_count=4"
+{% endhighlight %}
+
+Now the output of `jax.device_count()` shows `4`. Sharding would split the data across these cores(represented as a "mesh") and peroform calculations in parallel.
+{% highlight python %}
+from jax.sharding import PartitionSpec as P, NamedSharding
+mesh = jax.make_mesh((4, 1), ('x', 'y'))
+x = jnp.linspace(-4, 4, 10000000) // data
+y = jax.device_put(x, NamedSharding(mesh, P(('x', 'y')))) // splitting the data
+jax.debug.visualize_array_sharding(y)
+{% endhighlight %}
+In `jax.make_mesh((a, b),`... `b` is the number of dimensions of the data and the product of `a` and `b` should match the total number of cores. `visualize_array_sharding_` shows the layout of how the data is sharded. In my case the data is one dimensional with four cores.
+<table class="standard-table">
+  <thead>
+    <tr>
+      <th class="standard-table-entry">CPU 0</th>
+	  <th class="standard-table-entry">CPU 1</th>
+	  <th class="standard-table-entry">CPU 2</th>
+	  <th class="standard-table-entry">CPU 3</th>
+    </tr>
+  </thead>
+</table>
+Now any function applied on `y` will be processed in parallel. Sharding can also be combined with the JIT to increase speed. We can apply the `func` defined earlier on the sharded or non-sharded data, along with its jitted version. This gives four methods to compare.
+1. Baseline
+2. JIT
+3. Sharding
+4. Sharding + JIT
+
+Here are the results:
+<img src="{{ "/assets/jax-intro/jax-intro-2.svg" | relative_url }}" alt="Comparision of Timings." class="centre-image"><br/>
+The sharding did not reduce the time much compared to the baseline, I'm guessing this because the CPU has a lot more overhead than a GPU or TPU would have. Compared to the jitted version it did get a 2x improvement. The JIT seems to be doing a lot though with it getting a 3.5x increase over the baseline about 5x over the sharded one. Combined, they are 9x faster than the baseline.
+## Conclusion
+That concludes what I've learnt so far by mainly going through JAX documentation, in my next post I plan to do something more involved. Thanks for reading!.
+## References
+[1] <span id="ref1"></span>[https://docs.jax.dev/](https://docs.jax.dev/en/latest/index.html)<br/>
+[2] <span id="ref2"></span>[https://numpy.org/](https://numpy.org/)<br/>
+[3] <span id="ref3"></span>[https://pytorch.org/](https://pytorch.org/)<br/>

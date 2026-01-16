@@ -20,7 +20,7 @@
 
 body {
   background-color: var(--base3);
-  color: var(--base00);
+  color: var(--base03);
   font-family: "Noto Sans Mono", monospace;
 }
 
@@ -32,7 +32,7 @@ code, pre {
 /* Reduce side margins / widen content */
 
 .wrapper {
-  max-width: 1100px; /* default is ~800px */
+  max-width: 1200px; /* default is ~800px */
   padding-right: 1rem;
   padding-left: 1rem;
 }
@@ -48,14 +48,14 @@ code, pre {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
 @media screen and (min-width: 1200px) {
   .site-header .wrapper {
-    max-width: 1100px;
+    max-width: 1200px;
   }
 }
 
@@ -74,6 +74,7 @@ code, pre {
 .site-title {
   margin: 0;
   line-height: 1;
+  font-size: 32px !important;
 }
 
 .site-nav {
@@ -81,19 +82,57 @@ code, pre {
   margin: 0;
 }
 
-.site-title,
+.page-link {
+  font-size: 20px !important;
+}
+
+.site-header .site-title,
+.site-title:visited,
 .post-title,
-.page-title {
-  color: #002b36;
-}
-
-body {
-  color: #002b36;
-}
-
+.page-link, .page-link:visited,
+.footer-heading,
 .home h2,
-.post h1,
-.post-content,
-.page-content {
-  color: #002b36;
+h2{
+  color: var(--base03) !important;
+}
+
+.site-footer {
+  padding: 0.5rem 0 !important;
+}
+
+.footer-heading {
+  margin-bottom: 0;
+}
+
+p {
+  text-align: justify;
+}
+
+h2#references + p {
+  text-align: left;
+}
+
+.centre-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-col {
+    margin-top: 0.8em;
+    margin-bottom: 0.1em;
+}
+
+.standard-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--base03);
+}
+
+.standard-table-entry {
+    border: 2px solid var(--base03);
+    padding: 10px;
+    text-align: center;
+    background-color: var(--base3);
+    color: var(--base03);
 }
