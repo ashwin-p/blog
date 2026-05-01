@@ -366,4 +366,4 @@ field is essential.
 
 [12] <span id="ref12"></span>[MLP-Mixer: An all-MLP Architecture for Vision](https://arxiv.org/abs/2105.01601){:target="_blank" rel="noopener"}
 
-[13] <span id="ref13"></span>[Identity Mappings in Deep Residual Networks](https://arxiv.org/abs/1603.05027){:target="_blank" rel="noopene
+[13] <span id="ref13"></span>[Identity Mappings in Deep Residual Networks](https://arxiv.org/abs/1603.05027){:target="_blank" rel="noopener"}
