@@ -73,10 +73,10 @@ In `jax.make_mesh((a, b),`... `b` is the number of dimensions of the data and th
 <table class="standard-table">
   <thead>
     <tr>
-      <th class="standard-table-entry">CPU 0</th>
-	  <th class="standard-table-entry">CPU 1</th>
-	  <th class="standard-table-entry">CPU 2</th>
-	  <th class="standard-table-entry">CPU 3</th>
+      <th class="standard-table-heading">CPU 0</th>
+	  <th class="standard-table-heading">CPU 1</th>
+	  <th class="standard-table-heading">CPU 2</th>
+	  <th class="standard-table-heading">CPU 3</th>
     </tr>
   </thead>
 </table>

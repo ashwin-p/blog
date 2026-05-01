@@ -1,8 +1,78 @@
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    options: {
+      renderActions: {
+        addCopyText: [156, (doc) => {
+          for (const math of doc.math) {
+            const node = math.typesetRoot;
+            const source = (math.display ? '$$' : '$') + math.math + (math.display ? '$$' : '$');
+            
+            // Avoid duplicates
+            if (node.querySelector('.mjx-copytext')) continue;
+
+            const span = document.createElement('span');
+            span.className = 'mjx-copytext';
+            span.innerText = source; // innerText helps with clipboard formatting
+            node.appendChild(span);
+          }
+        }, '']
+      }
+    },
+    startup: {
+      ready() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          /* Ensure the math container is the reference point for our overlay */
+          mjx-container {
+            position: relative !important;
+          }
+
+          /* Keep block equations centered exactly as Minima expects */
+          mjx-container[display="true"] {
+            margin: 1.5em 0 !important;
+            text-align: center !important;
+          }
+
+          /* The visual math: make it 'ghostly' so mouse clicks pass through it */
+          mjx-container > mjx-chtml, 
+          mjx-container > svg {
+            pointer-events: none !important;
+          }
+
+          /* The invisible LaTeX overlay */
+          .mjx-copytext {
+            position: absolute !important;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10 !important;
+            color: transparent !important; /* Hide text but keep it selectable */
+            background: transparent !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: text;
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
+            align-items: center; /* Vertically center the invisible text */
+          }
+
+          /* Align the invisible text horizontally based on math type */
+          mjx-container[display="true"] .mjx-copytext {
+            justify-content: center;
+          }
+          mjx-container:not([display="true"]) .mjx-copytext {
+            justify-content: flex-start;
+          }
+        `;
+        document.head.appendChild(style);
+        MathJax.startup.defaultReady();
+      }
+    }
   };
 </script>
+
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <head>

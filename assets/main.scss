@@ -129,10 +129,19 @@ h2#references + p {
     border: 2px solid var(--base03);
 }
 
+.standard-table-heading {
+    border: 2px solid var(--base03);
+    padding: 10px;
+    text-align: center;
+    background-color: var(--base3);
+    color: var(--base03);
+}
+
 .standard-table-entry {
     border: 2px solid var(--base03);
     padding: 10px;
     text-align: center;
     background-color: var(--base3);
     color: var(--base03);
+    font-weight: normal;
 }

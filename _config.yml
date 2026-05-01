@@ -21,7 +21,7 @@
 title: Logging Likelihoods
 author: Ashwin P
 description: >- # this means to ignore newlines until "baseurl:"
-  A blog where I will be logging my journey on machine learning and maybe other stuff. Built using Jekyll.
+  A place to log the things I work on. Built using Jekyll.
 baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "https://ashwin-p.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ashw1np
